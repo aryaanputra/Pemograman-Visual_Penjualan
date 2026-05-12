@@ -1,27 +1,30 @@
 package Koneksi;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
-/**
- * @author aaryaanputraa
- */
 public class koneksi {
+
     private Connection koneksi;
-    public Connection connect(){
-        try{
+
+    public Connection connect() {
+
+        try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-            System.out.println("Berhasil terhubung database");
-        }catch(ClassNotFoundException ex){
-        System.out.println("Gagal terhubung database: "+ex);
-    }
-        String url = "jdbc:mysql://localhost/penjualan";
-        try{
+
+            String url = "jdbc:mysql://localhost:3306/penjualan?serverTimezone=Asia/Jakarta";
+
             koneksi = DriverManager.getConnection(url, "root", "");
+
             System.out.println("Berhasil terhubung database");
+
+        } catch (ClassNotFoundException | SQLException ex) {
+
+            System.out.println("Gagal terhubung database: " + ex);
+
         }
-        catch(SQLException ex){
-            System.out.println("Gagal terhubung database");
-        }
+
         return koneksi;
     }
 }

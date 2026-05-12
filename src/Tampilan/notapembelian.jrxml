@@ -1,0 +1,163 @@
+<!-- Created with Jaspersoft Studio version 7.0.6.final using JasperReports Library version 7.0.6-5d2a603fdc6b3db8f842a83383e594f41891534d  -->
+<jasperReport name="notapembelian" language="java" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="4bbfc319-863d-4595-b5df-f322a909a6d0">
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="Penjualan.jrdax"/>
+	<property name="com.jaspersoft.studio.data.sql.tables" value="cGVuanVhbGFuLnBlbWVzYW5hbiBBUyAsMzcsNDEsMTFmNjU5ODUtMDA2Yy00NDg4LWFjM2MtNmNj&#xa;ODMxNzZmNGU3O3Blbmp1YWxhbi5kZXRhaWxfcGVtZXNhbmFuIEFTICwyMzMsNDgsYmE1YTk2NGMt&#xa;ZDgxYS00YTJkLTg4NzItMGU3YzRlMThlNDRiOw=="/>
+	<query language="sql"><![CDATA[SELECT penjualan.pemesanan.no_faktur,
+	penjualan.pemesanan.nama_pelanggan,
+	penjualan.pemesanan.tanggal,
+	penjualan.pemesanan.total,
+	penjualan.pemesanan.bayar,
+	penjualan.pemesanan.kembalian,
+	penjualan.detail_pemesanan.jumlah,
+	penjualan.detail_pemesanan.harga_jual,
+	penjualan.detail_pemesanan.nama_barang,
+	penjualan.detail_pemesanan.id_barang
+FROM penjualan.detail_pemesanan
+	INNER JOIN penjualan.pemesanan ON 
+	 penjualan.detail_pemesanan.no_faktur = penjualan.pemesanan.no_faktur]]></query>
+	<field name="no_faktur" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="no_faktur"/>
+		<property name="com.jaspersoft.studio.field.label" value="no_faktur"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pemesanan"/>
+	</field>
+	<field name="nama_pelanggan" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nama_pelanggan"/>
+		<property name="com.jaspersoft.studio.field.label" value="nama_pelanggan"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pemesanan"/>
+	</field>
+	<field name="tanggal" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="tanggal"/>
+		<property name="com.jaspersoft.studio.field.label" value="tanggal"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pemesanan"/>
+	</field>
+	<field name="total" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="total"/>
+		<property name="com.jaspersoft.studio.field.label" value="total"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pemesanan"/>
+	</field>
+	<field name="bayar" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="bayar"/>
+		<property name="com.jaspersoft.studio.field.label" value="bayar"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pemesanan"/>
+	</field>
+	<field name="kembalian" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="kembalian"/>
+		<property name="com.jaspersoft.studio.field.label" value="kembalian"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pemesanan"/>
+	</field>
+	<field name="jumlah" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="jumlah"/>
+		<property name="com.jaspersoft.studio.field.label" value="jumlah"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detail_pemesanan"/>
+	</field>
+	<field name="harga_jual" class="java.lang.Integer">
+		<property name="com.jaspersoft.studio.field.name" value="harga_jual"/>
+		<property name="com.jaspersoft.studio.field.label" value="harga_jual"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detail_pemesanan"/>
+	</field>
+	<field name="nama_barang" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="nama_barang"/>
+		<property name="com.jaspersoft.studio.field.label" value="nama_barang"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detail_pemesanan"/>
+	</field>
+	<field name="id_barang" class="java.lang.String">
+		<property name="com.jaspersoft.studio.field.name" value="id_barang"/>
+		<property name="com.jaspersoft.studio.field.label" value="id_barang"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="detail_pemesanan"/>
+	</field>
+	<background splitType="Stretch"/>
+	<title height="79" splitType="Stretch">
+		<element kind="staticText" uuid="e2db90f8-42bd-4221-932f-5441e7751519" x="0" y="5" width="550" height="30" markup="rtf" fontName="Arial" fontSize="17.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[KARYA TIRTA MANDIRI]]></text>
+		</element>
+		<element kind="staticText" uuid="e7c817fb-e75d-4181-8304-3857d085045b" x="2" y="28" width="550" height="30" markup="rtf" fontName="Arial" fontSize="15.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[JL. MH. THAMRIN RT 03 RW 01 TANGERANG BANTEN 15143]]></text>
+		</element>
+		<element kind="staticText" uuid="bd6046ce-924f-4842-9a44-eed128c12f20" x="0" y="46" width="550" height="30" markup="rtf" fontName="Arial" fontSize="15.0" bold="true" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[0813-1612-5356]]></text>
+		</element>
+	</title>
+	<pageHeader height="98" splitType="Stretch">
+		<element kind="staticText" uuid="d246b17a-1055-455b-9f8c-94caa18705d9" x="0" y="8" width="551" height="12">
+			<text><![CDATA[-----------------------------------------------------------------------------------------------]]></text>
+		</element>
+		<element kind="staticText" uuid="38cc229c-215e-475e-bbbe-dde006a75303" x="0" y="12" width="551" height="12">
+			<text><![CDATA[-----------------------------------------------------------------------------------------------]]></text>
+		</element>
+		<element kind="staticText" uuid="0e372329-cc7c-41e8-a313-3cff17a8b59c" x="0" y="56" width="551" height="12">
+			<text><![CDATA[-----------------------------------------------------------------------------------------------]]></text>
+		</element>
+		<element kind="staticText" uuid="a6ebc2d3-32fd-4a1b-9934-5c1b9d472ac4" x="0" y="60" width="551" height="12">
+			<text><![CDATA[-----------------------------------------------------------------------------------------------]]></text>
+		</element>
+	</pageHeader>
+	<columnHeader height="224" splitType="Stretch">
+		<element kind="frame" uuid="e1cc590d-d8a8-43dd-9bde-346d86fb132f" x="2" y="0" width="549" height="224">
+			<element kind="textField" uuid="d27a7596-5af9-42cd-ae18-05b7b7571557" x="-2" y="10" width="100" height="16" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{id_barang}]]></expression>
+			</element>
+			<element kind="textField" uuid="3f0da21a-72ae-49ba-9cda-0d6485066ec4" x="180" y="10" width="100" height="16" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{nama_barang}]]></expression>
+			</element>
+			<element kind="textField" uuid="5b399d81-0837-466d-aa1d-5cf2a017ff4a" x="360" y="10" width="60" height="16" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{jumlah}]]></expression>
+			</element>
+			<element kind="textField" uuid="070cbf68-816c-4620-aa51-602761f74efd" x="430" y="10" width="100" height="16" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{harga_jual}]]></expression>
+			</element>
+			<element kind="textField" uuid="04583b5b-794c-458a-a8b2-807de44f43db" x="430" y="130" width="100" height="16" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{total}]]></expression>
+			</element>
+			<element kind="textField" uuid="ab49e740-e31e-43a8-83ab-c831220748f9" x="430" y="160" width="100" height="16" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{bayar}]]></expression>
+			</element>
+			<element kind="textField" uuid="c18be074-043c-4e82-95c9-8f9913783cf0" x="430" y="187" width="100" height="16" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{kembalian}]]></expression>
+			</element>
+			<element kind="staticText" uuid="c615c811-f6cc-4572-945d-0d61eb816ae0" x="10" y="131" width="100" height="15">
+				<text><![CDATA[Total]]></text>
+			</element>
+			<element kind="staticText" uuid="c7afc34b-0c85-4dee-9a30-97834724172f" x="10" y="161" width="100" height="15">
+				<text><![CDATA[Bayar]]></text>
+			</element>
+			<element kind="staticText" uuid="49d820db-99c5-4aeb-9df7-f6d82129cb08" x="8" y="190" width="100" height="15">
+				<text><![CDATA[Kembalian]]></text>
+			</element>
+			<element kind="textField" uuid="00d09746-a2f3-44aa-8072-215c60507e23" x="10" y="-72" width="220" height="30" hTextAlign="Left" vTextAlign="Middle">
+				<expression><![CDATA[$F{no_faktur}]]></expression>
+			</element>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="98" splitType="Stretch">
+			<element kind="textField" uuid="5079ffa9-11bb-42f6-9bc1-cb03e8fad288" x="189" y="65" width="172" height="16" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{nama_pelanggan}]]></expression>
+			</element>
+			<element kind="textField" uuid="a7440b6c-9750-43a5-9e7a-ba7316438e9b" x="189" y="40" width="172" height="16" hTextAlign="Center" vTextAlign="Middle">
+				<expression><![CDATA[$F{tanggal}]]></expression>
+			</element>
+		</band>
+	</detail>
+	<columnFooter height="205" splitType="Stretch">
+		<element kind="staticText" uuid="092d7631-1306-45a6-b022-16023c6a6345" x="227" y="70" width="100" height="15" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[KRITIK&SARAN]]></text>
+		</element>
+		<element kind="staticText" uuid="9d377d53-32fd-4630-ae5f-86895d91da49" x="227" y="89" width="100" height="15" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[0813-1612-5356]]></text>
+		</element>
+		<element kind="staticText" uuid="1e8c5b0d-8781-4346-8637-0cdef565db89" x="2" y="20" width="550" height="20" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[=====================================================================]]></text>
+		</element>
+		<element kind="staticText" uuid="19bdcaa7-68fe-4149-bdf1-68aef2aabe24" x="2" y="30" width="550" height="20" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[=====================================================================]]></text>
+		</element>
+		<element kind="staticText" uuid="0ff3f523-e2c9-4d37-8708-502437dac5e3" x="0" y="120" width="550" height="20" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[=====================================================================]]></text>
+		</element>
+		<element kind="staticText" uuid="cf2abba1-1738-45aa-b088-dabab53c7818" x="0" y="110" width="550" height="20" hTextAlign="Center" vTextAlign="Middle">
+			<text><![CDATA[=====================================================================]]></text>
+		</element>
+	</columnFooter>
+	<pageFooter height="54" splitType="Stretch"/>
+	<summary height="229" splitType="Stretch"/>
+</jasperReport>

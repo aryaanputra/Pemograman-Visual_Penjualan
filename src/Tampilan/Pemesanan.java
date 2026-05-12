@@ -8,9 +8,14 @@ import java.sql.Statement;
 import java.util.Date;
 import java.awt.Dimension;
 import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.HashMap;
 import javax.swing.JDialog;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 /**
  * @author aaryaanputraa
  */
@@ -93,6 +98,42 @@ public class Pemesanan extends javax.swing.JFrame {
         txtidbarang.requestFocus();
     }
     
+    
+    public String generateNoFaktur() {
+        String no_faktur;
+
+        Date now = new Date();
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMddHHmmss");
+
+        no_faktur = "TRA" + sdf.format(now);
+
+        return no_faktur;
+    }
+    
+    private void cetakLaporanPelanggan() {
+        try {
+
+            String path = "src/Tampilan/dbpelanggan1.jasper";
+
+            JasperPrint jp = JasperFillManager.fillReport(
+                path,
+                null,
+                conn
+            );
+
+            JasperViewer.viewReport(jp, false);
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                null,
+                "Gagal cetak : " + e.getMessage()
+            );
+
+        }
+    }
+    
     public void setIdBarang(String kd_brg){
         txtidbarang.setText(kd_brg);
     }
@@ -116,7 +157,8 @@ public class Pemesanan extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Pemesanan.class.getName());
     public Pemesanan() {
         initComponents();
-        setPreferredSize(new Dimension(2000, 800));
+        txtnotrans.setText(generateNoFaktur());
+//        setPreferredSize(new Dimension(2000, 800));
         model = new DefaultTableModel();
 
         jTable1.setModel(model);
@@ -169,7 +211,7 @@ public class Pemesanan extends javax.swing.JFrame {
         jTable1 = new javax.swing.JTable();
         btntambah = new javax.swing.JButton();
         btnhapus = new javax.swing.JButton();
-        btnsipan = new javax.swing.JButton();
+        btnsimpan = new javax.swing.JButton();
         txttampil = new javax.swing.JTextField();
         jLabel9 = new javax.swing.JLabel();
         txttotal = new javax.swing.JTextField();
@@ -182,6 +224,8 @@ public class Pemesanan extends javax.swing.JFrame {
 
         jLabel1.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         jLabel1.setText("No Transaksi");
+
+        txtnotrans.setEnabled(false);
 
         jLabel2.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         jLabel2.setText("ID Customer");
@@ -233,12 +277,13 @@ public class Pemesanan extends javax.swing.JFrame {
             pn_inputatasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pn_inputatasLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pn_inputatasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(txtnotrans, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pn_inputatasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(pn_inputatasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel4)
-                        .addComponent(txttanggal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(txttanggal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pn_inputatasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel1)
+                        .addComponent(txtnotrans, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pn_inputatasLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel2)
@@ -303,19 +348,20 @@ public class Pemesanan extends javax.swing.JFrame {
             pn_inputanbawahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pn_inputanbawahLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pn_inputanbawahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel5)
-                    .addComponent(txtidbarang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pn_inputanbawahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(pn_inputanbawahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel8)
+                        .addComponent(txtjumlah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(pn_inputanbawahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel7)
+                        .addComponent(txtharga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(pn_inputanbawahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel6)
                         .addComponent(txtnamabarang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGroup(pn_inputanbawahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(jLabel7)
-                            .addComponent(txtharga, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(pn_inputanbawahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                .addComponent(jLabel8)
-                                .addComponent(txtjumlah, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addComponent(btndatabarang)))
+                        .addComponent(btndatabarang))
+                    .addGroup(pn_inputanbawahLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel5)
+                        .addComponent(txtidbarang, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(7, Short.MAX_VALUE))
         );
 
@@ -338,8 +384,8 @@ public class Pemesanan extends javax.swing.JFrame {
         btnhapus.setText("-");
         btnhapus.addActionListener(this::btnhapusActionPerformed);
 
-        btnsipan.setText("Simpan");
-        btnsipan.addActionListener(this::btnsipanActionPerformed);
+        btnsimpan.setText("Simpan");
+        btnsimpan.addActionListener(this::btnsimpanActionPerformed);
 
         txttampil.setEnabled(false);
 
@@ -354,6 +400,8 @@ public class Pemesanan extends javax.swing.JFrame {
         jLabel11.setFont(new java.awt.Font("Helvetica Neue", 1, 13)); // NOI18N
         jLabel11.setText("Kembalian");
 
+        txtkembalian.setEnabled(false);
+
         javax.swing.GroupLayout pn_belanjaLayout = new javax.swing.GroupLayout(pn_belanja);
         pn_belanja.setLayout(pn_belanjaLayout);
         pn_belanjaLayout.setHorizontalGroup(
@@ -361,7 +409,7 @@ public class Pemesanan extends javax.swing.JFrame {
             .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pn_belanjaLayout.createSequentialGroup()
                 .addGap(49, 49, 49)
-                .addComponent(btnsipan)
+                .addComponent(btnsimpan)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txttampil, javax.swing.GroupLayout.PREFERRED_SIZE, 187, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -390,7 +438,7 @@ public class Pemesanan extends javax.swing.JFrame {
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 119, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(14, 14, 14)
                 .addGroup(pn_belanjaLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnsipan)
+                    .addComponent(btnsimpan)
                     .addComponent(txttampil, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(txttotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btntambah)
@@ -441,6 +489,7 @@ public class Pemesanan extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtjumlahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtjumlahActionPerformed
@@ -462,87 +511,72 @@ public class Pemesanan extends javax.swing.JFrame {
         txtkembalian.setText("0");
     }//GEN-LAST:event_btnhapusActionPerformed
 
-    private void btnsipanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsipanActionPerformed
-        DefaultTableModel model = (DefaultTableModel)jTable1.getModel();
-
-        String no_faktur = txtnotrans.getText();
-        String tanggal = txttanggal.getText();
-        String id_customer = txtidcustomer.getText();
-        String total = txttotal.getText();
-
+    private void btnsimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnsimpanActionPerformed
         try {
-            conn.setAutoCommit(false); // biar transaksi aman
-
-            // =========================
-            // 1. SIMPAN DATA HEADER
-            // =========================
-            String sqlHeader = "INSERT INTO pemesanan (no_faktur, tanggal, id_pelanggan, nama_pelanggan, total, bayar, kembalian) VALUES (?,?,?,?,?,?,?)";
-            PreparedStatement pHeader = conn.prepareStatement(sqlHeader);
-
-            pHeader.setString(1, txtnotrans.getText());
-            pHeader.setString(2, txttanggal.getText());
-            pHeader.setString(3, txtidcustomer.getText());
-            pHeader.setString(4, txtnamacustomer.getText());
-            pHeader.setString(5, txttotal.getText());
-            pHeader.setString(6, txtbayar.getText());
-            pHeader.setString(7, txtkembalian.getText());
-
-            pHeader.executeUpdate();
-            pHeader.close();
-
-
-            // =========================
-            // 2. SIMPAN DETAIL BARANG
-            // =========================
-            int baris = jTable1.getRowCount();
-
-            String sqlDetail = "INSERT INTO detail_pemesanan (no_faktur, id_barang, nama_barang, jumlah, harga_jual) VALUES (?,?,?,?,?)";
-            PreparedStatement pDetail = conn.prepareStatement(sqlDetail);
-            pDetail.setString(1, txtnotrans.getText());
-            
-            for (int i = 0; i < baris; i++) {
-                pDetail.setString(2, jTable1.getValueAt(i, 0).toString());
-                pDetail.setString(3, jTable1.getValueAt(i, 1).toString());
-                pDetail.setString(4, jTable1.getValueAt(i, 2).toString());
-                pDetail.setString(5, jTable1.getValueAt(i, 3).toString());
-
-                pDetail.addBatch(); // lebih cepat dari execute satu-satu
-            }
-
-            pDetail.executeBatch();
-            pDetail.close();
-
-
-            // =========================
-            // 3. COMMIT TRANSAKSI
-            // =========================
-            conn.commit();
-            conn.setAutoCommit(true);
-
-            // =========================
-            // 4. RESET FORM
-            // =========================
-            clear();
-            utama();
-            kosong();
-            txttampil.setText("Rp.0");
-
-            System.out.println("Data berhasil disimpan!");
-
-        } catch (Exception e) {
-            try {
-                conn.rollback(); // balikin kalau gagal
-            } catch (Exception ex) {
-                ex.printStackTrace();
-            }
-
-            e.printStackTrace();
+    conn.setAutoCommit(false);
+    String noFaktur = generateNoFaktur();
+    String sqlHeader =
+        "INSERT INTO pemesanan "
+      + "(no_faktur, tanggal, id_pelanggan, nama_pelanggan, total, bayar, kembalian) "
+      + "VALUES (?,?,?,?,?,?,?)";
+    PreparedStatement pHeader =
+        conn.prepareStatement(sqlHeader);
+    pHeader.setString(1, noFaktur);
+    pHeader.setString(2, txttanggal.getText());
+    pHeader.setString(3, txtidcustomer.getText());
+    pHeader.setString(4, txtnamacustomer.getText());
+    pHeader.setString(5, txttotal.getText());
+    pHeader.setString(6, txtbayar.getText());
+    pHeader.setString(7, txtkembalian.getText());
+    pHeader.executeUpdate();
+    String sqlDetail =
+        "INSERT INTO detail_pemesanan "
+      + "(no_faktur, id_barang, nama_barang, jumlah, harga_jual) "
+      + "VALUES (?,?,?,?,?)";
+    PreparedStatement pDetail =
+        conn.prepareStatement(sqlDetail);
+    for (int i = 0; i < jTable1.getRowCount(); i++) {
+        pDetail.setString(1, noFaktur);
+        pDetail.setString(2,
+            jTable1.getValueAt(i, 0).toString());
+        pDetail.setString(3,
+            jTable1.getValueAt(i, 1).toString());
+        pDetail.setString(4,
+            jTable1.getValueAt(i, 2).toString());
+        pDetail.setString(5,
+            jTable1.getValueAt(i, 3).toString());
+        pDetail.addBatch();
+    }
+    pDetail.executeBatch();
+    conn.commit();
+    conn.setAutoCommit(true);
+    HashMap<String, Object> parameter =
+        new HashMap<>();
+    parameter.put("no_faktur", noFaktur);
+    JasperPrint jp =
+        JasperFillManager.fillReport(
+            "src/Tampilan/notapembelian.jasper",
+            parameter,
+            conn
+        );
+    JasperViewer.viewReport(jp, false);
+    clear();
+    utama();
+    kosong();
+    txttampil.setText("Rp.0");
+    JOptionPane.showMessageDialog(null,
+        "Transaksi berhasil disimpan!");
+} catch (Exception e) {
+    try {
+        conn.rollback();
+    } catch (Exception ex) {
+        ex.printStackTrace();
+    }
+    e.printStackTrace();
+    JOptionPane.showMessageDialog(null,
+        "Gagal menyimpan transaksi!");
         }
-        clear();
-        utama();
-        kosong();
-        txttampil.setText("Rp.0");
-    }//GEN-LAST:event_btnsipanActionPerformed
+    }//GEN-LAST:event_btnsimpanActionPerformed
 
     private void txtbayarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtbayarActionPerformed
         int total, bayar, kembalian;
@@ -562,7 +596,7 @@ public class Pemesanan extends javax.swing.JFrame {
        Barang_popup barang = new Barang_popup(this);
        
        
-       JDialog dialog = new JDialog(pesan, "Cari Data Barang", true);
+       JDialog dialog = new JDialog(pesan, "Data Barang", true);
        barang.setDialog(dialog);
        dialog.setContentPane(barang);
        dialog.pack();
@@ -574,7 +608,7 @@ public class Pemesanan extends javax.swing.JFrame {
        Pelanggan_popup pelanggan = new Pelanggan_popup(this);
        
        
-       JDialog dialog = new JDialog(pesan, "Cari Data Barang", true);
+       JDialog dialog = new JDialog(pesan, "Data Pelanggan", true);
        pelanggan.setDialog(dialog);
        dialog.setContentPane(pelanggan);
        dialog.pack();
@@ -591,7 +625,7 @@ public class Pemesanan extends javax.swing.JFrame {
     private javax.swing.JButton btndatabarang;
     private javax.swing.JButton btndatapelanggan;
     private javax.swing.JButton btnhapus;
-    private javax.swing.JButton btnsipan;
+    private javax.swing.JButton btnsimpan;
     private javax.swing.JButton btntambah;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel jLabel1;

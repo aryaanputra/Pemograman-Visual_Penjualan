@@ -5,6 +5,17 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import java.awt.event.KeyEvent;
 import Koneksi.koneksi;
+import java.io.File;
+import java.io.InputStream;
+import java.util.HashMap;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import net.sf.jasperreports.engine.JasperCompileManager;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.util.JRLoader;
+import net.sf.jasperreports.view.JasperViewer;
 /**
  * @author aaryaanputraa
  */
@@ -16,6 +27,8 @@ public class Pelanggan extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Pelanggan.class.getName());
     public Pelanggan() {
         initComponents();
+        conn = new koneksi().connect();
+        txtid.setText(generateIdPelanggan());
         kosong();
         aktif();
         datatable();
@@ -52,6 +65,7 @@ public class Pelanggan extends javax.swing.JFrame {
         bcari = new javax.swing.JButton();
         jScrollPane2 = new javax.swing.JScrollPane();
         tbplgn = new javax.swing.JTable();
+        btnCetak = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -79,6 +93,8 @@ public class Pelanggan extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         jLabel2.setText("ID Pelanggan");
+
+        txtid.setEnabled(false);
 
         jLabel3.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         jLabel3.setText("Nama Pelanggan");
@@ -245,6 +261,11 @@ public class Pelanggan extends javax.swing.JFrame {
         });
         jScrollPane2.setViewportView(tbplgn);
 
+        btnCetak.setFont(new java.awt.Font("Helvetica Neue", 1, 14)); // NOI18N
+        btnCetak.setText("CETAK");
+        btnCetak.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
+        btnCetak.addActionListener(this::btnCetakActionPerformed);
+
         javax.swing.GroupLayout jPanel5Layout = new javax.swing.GroupLayout(jPanel5);
         jPanel5.setLayout(jPanel5Layout);
         jPanel5Layout.setHorizontalGroup(
@@ -256,7 +277,9 @@ public class Pelanggan extends javax.swing.JFrame {
                     .addGroup(jPanel5Layout.createSequentialGroup()
                         .addComponent(txtcari, javax.swing.GroupLayout.PREFERRED_SIZE, 198, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(bcari, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(bcari, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(28, 28, 28)
+                        .addComponent(btnCetak, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(15, Short.MAX_VALUE))
         );
         jPanel5Layout.setVerticalGroup(
@@ -265,7 +288,8 @@ public class Pelanggan extends javax.swing.JFrame {
                 .addContainerGap()
                 .addGroup(jPanel5Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bcari, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(txtcari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtcari, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnCetak, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 128, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -314,6 +338,7 @@ public class Pelanggan extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     
@@ -322,7 +347,6 @@ public class Pelanggan extends javax.swing.JFrame {
     }
     
     protected void kosong(){
-        txtid.setText("");
         txtnm.setText("");
         txttelp.setText("");
         txtalamat.setText("");
@@ -332,13 +356,13 @@ public class Pelanggan extends javax.swing.JFrame {
     
     protected void datatable(){
         Object[] Baris = {
-            "ID Pelanggan", "Nama", "Jenis Kelamin", "No. Telepon", "Alamat"
+            "ID Pelanggan", "Nama", "Jenis Kelamin", "No. Telepon", "Alamat",
         };
         tabmode = new DefaultTableModel(null, Baris);
         String cariitem = txtcari.getText();
         
         try{
-            String sql = "SELECT * FROM pelanggan WHERE id like '%"+cariitem+"%' or nmplgn like '%"+"%' ORDER BY id ASC";
+            String sql = "SELECT * FROM pelanggan WHERE id LIKE '%"+cariitem+"%' OR nmplgn LIKE '%"+cariitem+"%' ORDER BY id ASC";
             Statement stat = conn.createStatement();
             ResultSet hasil = stat.executeQuery(sql);
             while(hasil.next()){
@@ -352,15 +376,70 @@ public class Pelanggan extends javax.swing.JFrame {
             }
             tbplgn.setModel(tabmode);
         }catch(Exception e){
-            JOptionPane.showMessageDialog(null, "data gagal dipanggil"+e);
+            JOptionPane.showMessageDialog(null, "data gagal dipanggil"+e.getMessage());
         }
     }
+    
+    public String generateIdPelanggan() {
+        String id = "PLG001";
+
+        try {
+            String sql = "SELECT id FROM pelanggan ORDER BY id ASC";
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+
+            int next = 1;
+
+            while (rs.next()) {
+                String currentID = rs.getString("id");
+                int angka = Integer.parseInt(currentID.substring(3));
+
+                if (angka == next) {
+                    next++; // lanjut ke angka berikutnya
+                } else {
+                    break; // ketemu yang bolong
+                }
+            }
+
+            id = "PLG" + String.format("%03d", next);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return id;
+    }
+    
+    private void cetakLaporanPelanggan() {
+        try {
+
+            String path = "src/Tampilan/dbpelanggan1.jasper";
+
+            JasperPrint jp = JasperFillManager.fillReport(
+                path,
+                null,
+                conn
+            );
+
+            JasperViewer.viewReport(jp, false);
+
+        } catch (Exception e) {
+
+            JOptionPane.showMessageDialog(
+                null,
+                "Gagal cetak : " + e.getMessage()
+            );
+
+        }
+    }
+    
     private void rperempuanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rperempuanActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_rperempuanActionPerformed
 
     private void bsimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bsimpanActionPerformed
         String jenis = null;
+        String id_pelanggan = generateIdPelanggan();
         if(rlaki.isSelected()){
             jenis = "Laki-Laki";
         }else{
@@ -369,7 +448,7 @@ public class Pelanggan extends javax.swing.JFrame {
         String sql = "INSERT INTO pelanggan VALUES (?,?,?,?,?)";
         try{
             PreparedStatement stat = conn.prepareStatement(sql);
-            stat.setString(1, txtid.getText());
+            stat.setString(1, id_pelanggan);
             stat.setString(2, txtnm.getText());
             stat.setString(3, jenis);
             stat.setString(4, txttelp.getText());
@@ -378,23 +457,24 @@ public class Pelanggan extends javax.swing.JFrame {
             stat.executeUpdate();
             JOptionPane.showMessageDialog(null, "data berhasil disimpan");
             kosong();
-            txtid.requestFocus();
+            txtid.setText(generateIdPelanggan());
         }
         catch(Exception e){
-            JOptionPane.showMessageDialog(null, "data gagal disimpan");
+            JOptionPane.showMessageDialog(null, e.getMessage());
         }
         datatable();
     }//GEN-LAST:event_bsimpanActionPerformed
 
     private void bubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bubahActionPerformed
         String jenis = null;
+        String id_barang = generateIdPelanggan();
         if(rlaki.isSelected()){
             jenis = "Laki-Laki";
         }else if(rperempuan.isSelected()){
             jenis = "Perempuan";
         }
         try{
-            String sql = "UPDATE pelanggan SET nmplgn=?, jenis=?, telepon=?, alamat=? WHERE id='"+txtid.getText()+"'";
+        String sql = "UPDATE pelanggan SET nmplgn=?, jenis=?, telepon=?, alamat=? WHERE id='"+txtid.getText()+"'";
         PreparedStatement stat = conn.prepareStatement(sql);
         stat.setString(1, txtnm.getText());
         stat.setString(2, jenis);
@@ -404,7 +484,7 @@ public class Pelanggan extends javax.swing.JFrame {
         stat.executeUpdate();
         JOptionPane.showMessageDialog(null, "data berhasil diubah");
         kosong();
-        txtid.requestFocus();
+        txtid.setText(generateIdPelanggan());
         }
         catch(Exception e){
             JOptionPane.showMessageDialog(null, "data gagal diubah");
@@ -435,6 +515,8 @@ public class Pelanggan extends javax.swing.JFrame {
     }//GEN-LAST:event_bkeluarActionPerformed
 
     private void bbatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bbatalActionPerformed
+        String id_pelanggan = generateIdPelanggan();
+        txtid.setText(id_pelanggan);
         kosong();
         datatable();
     }//GEN-LAST:event_bbatalActionPerformed
@@ -471,6 +553,10 @@ public class Pelanggan extends javax.swing.JFrame {
     private void txtcariActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtcariActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtcariActionPerformed
+
+    private void btnCetakActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCetakActionPerformed
+        cetakLaporanPelanggan();
+    }//GEN-LAST:event_btnCetakActionPerformed
     
     
     public static void main(String args[]) {
@@ -483,6 +569,7 @@ public class Pelanggan extends javax.swing.JFrame {
     private javax.swing.JButton bhapus;
     private javax.swing.JButton bkeluar;
     private javax.swing.JButton bsimpan;
+    private javax.swing.JButton btnCetak;
     private javax.swing.JButton bubah;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel jLabel1;

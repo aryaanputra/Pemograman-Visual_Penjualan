@@ -18,6 +18,7 @@ public class Barang extends javax.swing.JFrame {
     private static final java.util.logging.Logger logger = java.util.logging.Logger.getLogger(Barang.class.getName());
     public Barang() {
         initComponents();
+        txtid.setText(generateKodeBarang());
         kosong();
         aktif();
         datatable();
@@ -79,6 +80,8 @@ public class Barang extends javax.swing.JFrame {
 
         jLabel2.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         jLabel2.setText("ID Barang");
+
+        txtid.setEnabled(false);
 
         jLabel3.setFont(new java.awt.Font("Helvetica Neue", 1, 18)); // NOI18N
         jLabel3.setText("Nama Barang");
@@ -302,6 +305,7 @@ public class Barang extends javax.swing.JFrame {
         );
 
         pack();
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     
@@ -310,7 +314,6 @@ public class Barang extends javax.swing.JFrame {
     }
     
     protected void kosong(){
-        txtid.setText("");
         txtnm.setText("");
         cbjenis.setSelectedItem(0);
         txthargabeli.setText("");
@@ -319,54 +322,86 @@ public class Barang extends javax.swing.JFrame {
     }
     
     protected void datatable(){
-    Object[] Baris = {
-        "Kode Barang", "Nama Barang", "Jenis Barang", "Harga Beli", "Harga Jual"
-    };
-    tabmode = new DefaultTableModel(null, Baris);
-    tbplgn.setModel(tabmode);
+        Object[] Baris = {
+            "Kode Barang", "Nama Barang", "Jenis Barang", "Harga Beli", "Harga Jual"
+        };
+        tabmode = new DefaultTableModel(null, Baris);
+        tbplgn.setModel(tabmode);
 
-    String cariitem = txtcari.getText();
+        String cariitem = txtcari.getText();
 
-    try{
-        String sql = "SELECT * FROM barang WHERE kd_brg LIKE ? OR nm_brg LIKE ? ORDER BY kd_brg ASC";
-        PreparedStatement stat = conn.prepareStatement(sql);
-        stat.setString(1, "%" + cariitem + "%");
-        stat.setString(2, "%" + cariitem + "%");
+        try{
+            String sql = "SELECT * FROM barang WHERE kd_brg LIKE ? OR nm_brg LIKE ? ORDER BY kd_brg ASC";
+            PreparedStatement stat = conn.prepareStatement(sql);
+            stat.setString(1, "%" + cariitem + "%");
+            stat.setString(2, "%" + cariitem + "%");
 
-        ResultSet hasil = stat.executeQuery();
+            ResultSet hasil = stat.executeQuery();
 
-        while(hasil.next()){
-            tabmode.addRow(new Object[]{
-                hasil.getString("kd_brg"),
-                hasil.getString("nm_brg"),
-                hasil.getString("jenis"),
-                hasil.getInt("hargabeli"),
-                hasil.getInt("hargajual")
-            });
+            while(hasil.next()){
+                tabmode.addRow(new Object[]{
+                    hasil.getString("kd_brg"),
+                    hasil.getString("nm_brg"),
+                    hasil.getString("jenis"),
+                    hasil.getInt("hargabeli"),
+                    hasil.getInt("hargajual")
+                });
+            }
+
+            hasil.close();
+            stat.close();
+        }catch(Exception e){
+            JOptionPane.showMessageDialog(null, "Data gagal dipanggil: " + e.getMessage());
+        }
+    }
+    
+    public String generateKodeBarang() {
+        String id = "BRG001";
+
+        try {
+            String sql = "SELECT kd_brg FROM barang ORDER BY kd_brg ASC";
+            Statement st = conn.createStatement();
+            ResultSet rs = st.executeQuery(sql);
+
+            int next = 1;
+
+            while (rs.next()) {
+                String currentID = rs.getString("kd_brg");
+                int angka = Integer.parseInt(currentID.substring(3));
+
+                if (angka == next) {
+                    next++; // lanjut ke angka berikutnya
+                } else {
+                    break; // ketemu yang bolong
+                }
+            }
+
+            id = "BRG" + String.format("%03d", next);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
-        hasil.close();
-        stat.close();
-    }catch(Exception e){
-        JOptionPane.showMessageDialog(null, "Data gagal dipanggil: " + e.getMessage());
-    }
+        return id;
     }
     private void bsimpanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bsimpanActionPerformed
         String sql = "INSERT INTO barang VALUES (?,?,?,?,?)";
-        try{
+        try {
+            String kd_brg = generateKodeBarang();
+
             PreparedStatement stat = conn.prepareStatement(sql);
-            stat.setString(1, txtid.getText());
+            stat.setString(1, kd_brg);
             stat.setString(2, txtnm.getText());
             stat.setString(3, cbjenis.getSelectedItem().toString());
             stat.setString(4, txthargabeli.getText());
             stat.setString(5, txthargajual.getText());
-            
             stat.executeUpdate();
             JOptionPane.showMessageDialog(null, "data berhasil disimpan");
             kosong();
-            txtid.requestFocus();
-        }
-        catch(Exception e){
+            txtid.setText(generateKodeBarang());
+            txtnm.requestFocus();
+
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "data gagal disimpan");
         }
         datatable();
@@ -374,21 +409,23 @@ public class Barang extends javax.swing.JFrame {
 
     private void bubahActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bubahActionPerformed
         try{
+            String kd_brg = generateKodeBarang();
+            
             String sql = "UPDATE barang SET nm_brg=?, jenis=?, hargabeli=?, hargajual=? WHERE kd_brg='"+txtid.getText()+"'";
-        PreparedStatement stat = conn.prepareStatement(sql);
-        stat.setString(1, txtnm.getText());
-        stat.setString(2, cbjenis.getSelectedItem().toString());
-        stat.setString(3, txthargabeli.getText());
-        stat.setString(4, txthargajual.getText());
-        
-        stat.executeUpdate();
-        JOptionPane.showMessageDialog(null, "data berhasil diubah");
-        kosong();
-        txtid.requestFocus();
-        }
-        catch(Exception e){
-            JOptionPane.showMessageDialog(null, "data gagal diubah");
-        }
+            PreparedStatement stat = conn.prepareStatement(sql);
+            stat.setString(1, txtnm.getText());
+            stat.setString(2, cbjenis.getSelectedItem().toString());
+            stat.setString(3, txthargabeli.getText());
+            stat.setString(4, txthargajual.getText());
+
+            stat.executeUpdate();
+            JOptionPane.showMessageDialog(null, "data berhasil diubah");
+            kosong();
+            txtid.setText(kd_brg);
+            }
+            catch(Exception e){
+                JOptionPane.showMessageDialog(null, "data gagal diubah");
+            }
         datatable();
     }//GEN-LAST:event_bubahActionPerformed
 
@@ -415,6 +452,8 @@ public class Barang extends javax.swing.JFrame {
     }//GEN-LAST:event_bkeluarActionPerformed
 
     private void bbatalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bbatalActionPerformed
+        String kd_brg = generateKodeBarang();
+        txtid.setText(kd_brg);
         kosong();
         datatable();
     }//GEN-LAST:event_bbatalActionPerformed
